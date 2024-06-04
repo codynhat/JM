@@ -85,7 +85,7 @@ void init_codebooks(VideoParameters *vp){
 	InputParameters *Inp;
 	FILE *fpYI,*fpYB,*fpYP,*fpUVI,*fpUVB,*fpUVP;
 
-	
+
 
 	Inp = vp->p_Inp;
 
@@ -97,7 +97,7 @@ void init_codebooks(VideoParameters *vp){
 	size = cblen*dim;
 
 
-	temp = (float *)_aligned_malloc(sizeof(float)*dim,16);
+	temp = (float *)posix_memalign(sizeof(float)*dim,16);
 
 	for(mode=0;mode<3;mode++){
 		cb[mode] = (float **)malloc(sizeof(float *)*2);
@@ -105,7 +105,7 @@ void init_codebooks(VideoParameters *vp){
 
 	for(mode=0;mode<3;mode++){
 		for(pl=0;pl<2;pl++){
-			cb[mode][pl] = (float *)_aligned_malloc(size*sizeof(float),16);
+			cb[mode][pl] = (float *)posix_memalign(size*sizeof(float),16);
 		}
 	}
 
@@ -144,12 +144,12 @@ void init_codebooks(VideoParameters *vp){
 
 void read_vqindices(int frame){
 	FILE *fpIndex;
-	
+
 	if(vqindex==NULL) return;
 
 	fpIndex = fopen("vqindex.bin","rb");
 	check_file(fpIndex);
-	
+
 	fseek(fpIndex,vqlen*frame*sizeof(int),SEEK_SET);
 	fread(vqindex,sizeof(int),vqlen,fpIndex);
 
@@ -160,7 +160,7 @@ void quantize_mb(int **mb_rres,int width, int height, int mb_y,int mb_x,int pl,M
 	int i,j,vi,vj,uv,mode=0;
 	int t,idx,idx8x8;
 	int addr;
-	
+
 	if(dim==0) return;
 
 	addr = currMB->mbAddrX;
@@ -171,7 +171,7 @@ void quantize_mb(int **mb_rres,int width, int height, int mb_y,int mb_x,int pl,M
 	}else{
 		uv = pl;
 	}
-	
+
 	for (i = 0; i < height/(pl+1); i+=dims){
 		for(j = 0; j< width/(pl+1); j+=dims){
 
@@ -180,7 +180,7 @@ void quantize_mb(int **mb_rres,int width, int height, int mb_y,int mb_x,int pl,M
 			idx8x8 = (mb_y/8+i/8)*2/(pl+1)+(mb_x/8+j/8);
 
 			if(idx!=-dim && (currMB->cbp & mask[idx8x8] | pl)){
-					
+
 				if(is_intra(currMB)) mode = 0;
 				else if(is_p(currMB) && currMB->b8pdir[idx8x8]==BI_PRED) mode = 1;
 				else mode = 2;
