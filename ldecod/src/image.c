@@ -2548,17 +2548,17 @@ void decode_one_slice(Slice *currSlice)
 	if(flag){
 		int64 size;
 		char ans;
-		_fseeki64(fp_y, 0L, SEEK_END);
-		size = _ftelli64(fp_y);
-		_fseeki64(fp_y, 0L, SEEK_SET);
+		fseeko(fp_y, 0L, SEEK_END);
+		size = ftello(fp_y);
+		fseeko(fp_y, 0L, SEEK_SET);
 
 		if(size!=0){
 			printf("Residuals file already exist!\n");
 			printf("Do you want to overwrite it [y\\n]: ");
 			ans = getchar();
 			if(ans=='y'){
-				_chsize( _fileno(fp_y), 0);
-				_chsize( _fileno(fp_uv), 0);
+				ftruncate( fileno(fp_y), 0);
+				ftruncate( fileno(fp_uv), 0);
 			}else{
 				exit(1);
 			}

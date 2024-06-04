@@ -13,7 +13,7 @@
 #define FAST_NN_THRESHOLD 3
 
 #define my_malloc(size,d) aligned_alloc(size,d)
-#define my_free(ptr) _aligned_free(ptr)
+#define my_free(ptr) free(ptr)
 #define distance2(v1,v2,dim) distance2_sse2_2(v1,v2,dim)
 #define my_distance2(v1,v2,dim,min_dist) distance2(v1,v2,dim)
 #define signed_distance(v,h,c0,dim) signed_distance_sse2(v,h,c0,dim)
