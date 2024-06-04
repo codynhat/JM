@@ -97,7 +97,7 @@ void init_codebooks(VideoParameters *vp){
 	size = cblen*dim;
 
 
-	temp = (float *)posix_memalign(sizeof(float)*dim,16);
+	temp = (float *)aligned_alloc(sizeof(float)*dim,16);
 
 	for(mode=0;mode<3;mode++){
 		cb[mode] = (float **)malloc(sizeof(float *)*2);
@@ -105,7 +105,7 @@ void init_codebooks(VideoParameters *vp){
 
 	for(mode=0;mode<3;mode++){
 		for(pl=0;pl<2;pl++){
-			cb[mode][pl] = (float *)posix_memalign(size*sizeof(float),16);
+			cb[mode][pl] = (float *)aligned_alloc(size*sizeof(float),16);
 		}
 	}
 
